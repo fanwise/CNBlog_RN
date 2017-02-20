@@ -1,0 +1,3 @@
+rootProject.name = 'CNBlog_RN'
+
+include ':app'
