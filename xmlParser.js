@@ -25,6 +25,8 @@ export default class XmlParser {
             for (var i = 0; i < xml.childNodes.length; i++) {
                 var item = xml.childNodes.item(i);
                 var nodeName = item.nodeName;
+                if (nodeName === "#text")
+                    nodeName = "text";
                 if (typeof (obj[nodeName]) == "undefined") {
                     obj[nodeName] = arguments.callee(item);
                 } else {
