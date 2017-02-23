@@ -22,7 +22,6 @@ export default class Header extends Component {
 const styles = StyleSheet.create({
     wrapper: {
         height: 64,
-        backgroundColor: "#CCC"
     },
     container: {
         flex: 1,

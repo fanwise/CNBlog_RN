@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ListView, ActivityIndicator } from "react-native";
 import XmlParser from './xmlParser';
-import Row from './row';
+import BlogRow from './blogRow';
 
 var DOMParser = require('xmldom').DOMParser;
 
@@ -18,7 +18,7 @@ export default class Content extends Component {
         this.fetchApi();
     }
     fetchApi() {
-        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/40";
+        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/100";
         fetch(url)
             .then((response) => response.text())
             .then((responseText) => {
@@ -38,16 +38,21 @@ export default class Content extends Component {
             <View style={styles.container}>
                 <ListView
                     enableEmptySections
+                    showsVerticalScrollIndicator = {false}
                     dataSource={this.state.dataSource}
                     renderRow={({...value}) => {
                         return (
-                            <Row
+                            <BlogRow
                                 {...value}
                             />
                         )
                     }}
                     renderSeparator={(sectionId, rowId) => {
-                        return <View key={rowId} />
+                        return (
+                            <View key={rowId}>
+                                <Text></Text>
+                            </View>
+                        )
                     }}
                 />
                 {this.state.loading && <View style={styles.loading}>
@@ -63,7 +68,8 @@ export default class Content extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        marginHorizontal: 16
     },
     loading: {
       position: "absolute",
