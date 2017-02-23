@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ListView, ActivityIndicator } from "react-native";
-import XmlParser from './xmlParser';
 import BlogRow from './blogRow';
-
-var DOMParser = require('xmldom').DOMParser;
 
 export default class Content extends Component {
     constructor(props) {
@@ -18,19 +15,22 @@ export default class Content extends Component {
         this.fetchApi();
     }
     fetchApi() {
-        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/100";
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                var json = new XmlParser().parseXmlText(responseText);
-
+        var url = 'https://api.cnblogs.com/api/blogposts/@sitehome?pageIndex=1&pageSize=50';
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer HkgUpM8pyyCZM2gjr8k0FORNkBM98UIbFnJ7-Tv1z2QduHeA1sDtNhJi9o3-glPeY4WOoAfCnGiCAYcvFZhAn9ch_qnQMTSaCAcCV0PCdLbEO-JCsqm2FQSffcAr2Yl2E-msKnKEAkZC5jkrueHKIgk9LHh1g76LkguaovOQxboHEX64FbzvJIy2XUGBvWDN9IaGpH8PwQpS5mr1exXOYg'
+            }
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
                 this.setState({
                     loading: false,
-                    dataSource: this.state.dataSource.cloneWithRows(json.feed.entry)
+                    dataSource: this.state.dataSource.cloneWithRows(responseJson)
                 })
             })
             .catch((error) => {
-                console.log('Error fetching the feed: ', error);
+                console.error(error);
             });
     }
     render() {
@@ -38,7 +38,7 @@ export default class Content extends Component {
             <View style={styles.container}>
                 <ListView
                     enableEmptySections
-                    showsVerticalScrollIndicator = {false}
+                    showsVerticalScrollIndicator={false}
                     dataSource={this.state.dataSource}
                     renderRow={({...value}) => {
                         return (
@@ -71,13 +71,13 @@ const styles = StyleSheet.create({
         flex: 1
     },
     loading: {
-      position: "absolute",
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "rgba(0,0,0,.2)"
+        position: "absolute",
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "rgba(0,0,0,.2)"
     }
 });

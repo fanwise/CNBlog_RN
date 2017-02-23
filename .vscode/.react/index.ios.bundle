@@ -68608,7 +68608,24 @@ var _Dimensions=require(101         );var _Dimensions2=babelHelpers.interopRequi
 
 _Dimensions2.default.get('window'),screenWidth=_Dimensions$get.screenWidth,screenHeight=_Dimensions$get.screenHeight;var
 
-App=function(_Component){babelHelpers.inherits(App,_Component);function App(){babelHelpers.classCallCheck(this,App);return babelHelpers.possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).apply(this,arguments));}babelHelpers.createClass(App,[{key:'render',value:function render()
+App=function(_Component){babelHelpers.inherits(App,_Component);function App(){babelHelpers.classCallCheck(this,App);return babelHelpers.possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).apply(this,arguments));}babelHelpers.createClass(App,[{key:'componentWillMount',value:function componentWillMount()
+{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}},{key:'render',value:function render()
 {
 return(
 _react2.default.createElement(_reactNative.Image,{source:require(417                   ),style:styles.backgroundImage}, // 417 = ./icon/wallpaper.jpg
@@ -68653,19 +68670,22 @@ dataSource:ds.cloneWithRows([])};return _this;
 this.fetchApi();
 }},{key:'fetchApi',value:function fetchApi()
 {var _this2=this;
-var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/1/100";
-fetch(url).
-then(function(response){return response.text();}).
-then(function(responseText){
-var json=new _xmlParser2.default().parseXmlText(responseText);
+url='https://api.cnblogs.com/api/blogposts/@sitehome?pageIndex=1&pageSize=50';
+fetch(url,{
+method:'GET',
+headers:{
+'Authorization':'Bearer HkgUpM8pyyCZM2gjr8k0FORNkBM98UIbFnJ7-Tv1z2QduHeA1sDtNhJi9o3-glPeY4WOoAfCnGiCAYcvFZhAn9ch_qnQMTSaCAcCV0PCdLbEO-JCsqm2FQSffcAr2Yl2E-msKnKEAkZC5jkrueHKIgk9LHh1g76LkguaovOQxboHEX64FbzvJIy2XUGBvWDN9IaGpH8PwQpS5mr1exXOYg'}}).
 
+
+then(function(response){return response.json();}).
+then(function(responseJson){
 _this2.setState({
 loading:false,
-dataSource:_this2.state.dataSource.cloneWithRows(json.feed.entry)});
+dataSource:_this2.state.dataSource.cloneWithRows(responseJson)});
 
 }).
 catch(function(error){
-console.log('Error fetching the feed: ',error);
+console.error(error);
 });
 }},{key:'render',value:function render()
 {
@@ -70912,18 +70932,29 @@ zeros+='0';
 }
 return zeros+value;
 }},{key:'render',value:function render()
-{
+{var _this2=this;
 return(
+
+
+
+
+
+
+
+
+
+
+
 _react2.default.createElement(_reactNative.View,{style:styles.wrapper},
-_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.section},
+_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.section,onPress:function onPress(){console.log(_this2.props.Url);}},
 _react2.default.createElement(_reactNative.View,{style:styles.header},
-_react2.default.createElement(_reactNative.Text,{numberOfLines:2,style:styles.title},this.props.title.text),
+_react2.default.createElement(_reactNative.Text,{numberOfLines:2,style:styles.title},this.props.Title),
 _react2.default.createElement(_reactNative.Image,{
-source:this.props.author.avatar.text?{uri:this.props.author.avatar.text}:require(416                ), // 416 = ./icon/avator.jpg
-style:this.props.author.avatar.text?styles.avator:styles.defaultAvator})),
+source:this.props.Avatar?{uri:this.props.Avatar}:require(416                ), // 416 = ./icon/avator.jpg
+style:this.props.Avatar?styles.avator:styles.defaultAvator})),
 
 _react2.default.createElement(_reactNative.View,{style:styles.content},
-_react2.default.createElement(_reactNative.Text,{numberOfLines:3,style:styles.summary},this.props.summary.text)),
+_react2.default.createElement(_reactNative.Text,{numberOfLines:3,style:styles.summary},this.props.Description)),
 
 _react2.default.createElement(_reactNative.View,{style:styles.footer},
 _react2.default.createElement(_reactNative.View,{style:styles.icons},
@@ -70931,20 +70962,20 @@ _react2.default.createElement(_reactNative.Image,{
 style:styles.icon,
 source:require(414              )}), // 414 = ./icon/read.png
 
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.views.text),
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.ViewCount),
 _react2.default.createElement(_reactNative.Image,{
 style:styles.icon,
 source:require(413              )}), // 413 = ./icon/like.png
 
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.diggs.text),
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.DiggCount),
 _react2.default.createElement(_reactNative.Image,{
 style:styles.icon,
 source:require(415                 )}), // 415 = ./icon/comment.png
 
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.comments.text)),
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.CommentCount)),
 
 _react2.default.createElement(_reactNative.View,null,
-_react2.default.createElement(_reactNative.Text,{style:styles.time},this.formatTime(this.props.published.text)))))));
+_react2.default.createElement(_reactNative.Text,{style:styles.time},this.formatTime(this.props.PostDate)))))));
 
 
 

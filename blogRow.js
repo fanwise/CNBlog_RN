@@ -28,13 +28,13 @@ export default class BlogRow extends Component {
             <View style={styles.wrapper}>
                 <TouchableOpacity style={styles.section}>
                     <View style={styles.header}>
-                        <Text numberOfLines={2} style={styles.title}>{this.props.title.text}</Text>
+                        <Text numberOfLines={2} style={styles.title}>{this.props.Title}</Text>
                         <Image
-                            source={this.props.author.avatar.text ? { uri: this.props.author.avatar.text } : require('./icon/avator.jpg')}
-                            style={this.props.author.avatar.text ? styles.avator : styles.defaultAvator} />
+                            source={this.props.Avatar ? { uri: this.props.Avatar } : require('./icon/avator.jpg')}
+                            style={this.props.Avatar ? styles.avator : styles.defaultAvator} />
                     </View>
                     <View style={styles.content}>
-                        <Text numberOfLines={3} style={styles.summary}>{this.props.summary.text}</Text>
+                        <Text numberOfLines={3} style={styles.summary}>{this.props.Description}</Text>
                     </View>
                     <View style={styles.footer}>
                         <View style={styles.icons}>
@@ -42,20 +42,20 @@ export default class BlogRow extends Component {
                                 style={styles.icon}
                                 source={require('./icon/read.png')}
                             />
-                            <Text style={styles.iconNumber}>{this.props.views.text}</Text>
+                            <Text style={styles.iconNumber}>{this.props.ViewCount}</Text>
                             <Image
                                 style={styles.icon}
                                 source={require('./icon/like.png')}
                             />
-                            <Text style={styles.iconNumber}>{this.props.diggs.text}</Text>
+                            <Text style={styles.iconNumber}>{this.props.DiggCount}</Text>
                             <Image
                                 style={styles.icon}
                                 source={require('./icon/comment.png')}
                             />
-                            <Text style={styles.iconNumber}>{this.props.comments.text}</Text>
+                            <Text style={styles.iconNumber}>{this.props.CommentCount}</Text>
                         </View>
                         <View>
-                            <Text style={styles.time}>{this.formatTime(this.props.published.text)}</Text>
+                            <Text style={styles.time}>{this.formatTime(this.props.PostDate)}</Text>
                         </View>
                     </View>
                 </TouchableOpacity>
