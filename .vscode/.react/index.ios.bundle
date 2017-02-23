@@ -68603,15 +68603,20 @@ __d(/* CNBlog_RN/app.js */function(global, require, module, exports) {Object.def
 var _reactNative=require(12            ); // 12 = react-native
 var _content=require(409        );var _content2=babelHelpers.interopRequireDefault(_content); // 409 = ./content
 var _header=require(410       );var _header2=babelHelpers.interopRequireDefault(_header); // 410 = ./header
-var _footer=require(411       );var _footer2=babelHelpers.interopRequireDefault(_footer);var // 411 = ./footer
+var _footer=require(411       );var _footer2=babelHelpers.interopRequireDefault(_footer); // 411 = ./footer
+var _Dimensions=require(101         );var _Dimensions2=babelHelpers.interopRequireDefault(_Dimensions);var _Dimensions$get= // 101 = Dimensions
+
+_Dimensions2.default.get('window'),screenWidth=_Dimensions$get.screenWidth,screenHeight=_Dimensions$get.screenHeight;var
 
 App=function(_Component){babelHelpers.inherits(App,_Component);function App(){babelHelpers.classCallCheck(this,App);return babelHelpers.possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).apply(this,arguments));}babelHelpers.createClass(App,[{key:'render',value:function render()
 {
 return(
+_react2.default.createElement(_reactNative.Image,{source:require(417                   ),style:styles.backgroundImage}, // 417 = ./icon/wallpaper.jpg
 _react2.default.createElement(_reactNative.View,{style:styles.container},
 _react2.default.createElement(_header2.default,null),
 _react2.default.createElement(_content2.default,null),
-_react2.default.createElement(_footer2.default,null)));
+_react2.default.createElement(_footer2.default,null))));
+
 
 
 }}]);return App;}(_react.Component);exports.default=App;
@@ -68620,7 +68625,13 @@ _react2.default.createElement(_footer2.default,null)));
 var styles=_reactNative.StyleSheet.create({
 container:{
 flex:1,
-backgroundColor:"#30B3EE"}});
+backgroundColor:"#30B3EE88"},
+
+backgroundImage:{
+flex:1,
+width:screenWidth,
+height:screenHeight,
+resizeMode:'cover'}});
 }, 403, null, "CNBlog_RN/app.js");
 __d(/* CNBlog_RN/content.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
 var _reactNative=require(12            ); // 12 = react-native
@@ -68692,8 +68703,7 @@ size:'large'}))));
 
 var styles=_reactNative.StyleSheet.create({
 container:{
-flex:1,
-marginHorizontal:16},
+flex:1},
 
 loading:{
 position:"absolute",
@@ -70878,9 +70888,12 @@ exports.DOMImplementation=DOMImplementation;
 exports.XMLSerializer=XMLSerializer;
 }, 407, null, "xmldom/dom.js");
 __d(/* CNBlog_RN/blogRow.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
-var _reactNative=require(12            );var // 12 = react-native
+var _reactNative=require(12            ); // 12 = react-native
+var _Dimensions=require(101         );var _Dimensions2=babelHelpers.interopRequireDefault(_Dimensions);var _Dimensions$get= // 101 = Dimensions
 
-BlogRow=function(_Component){babelHelpers.inherits(BlogRow,_Component);function BlogRow(){babelHelpers.classCallCheck(this,BlogRow);return babelHelpers.possibleConstructorReturn(this,(BlogRow.__proto__||Object.getPrototypeOf(BlogRow)).apply(this,arguments));}babelHelpers.createClass(BlogRow,[{key:"formatTime",value:function formatTime(
+_Dimensions2.default.get('window'),screenWidth=_Dimensions$get.screenWidth,screenHeight=_Dimensions$get.screenHeight;var
+
+BlogRow=function(_Component){babelHelpers.inherits(BlogRow,_Component);function BlogRow(){babelHelpers.classCallCheck(this,BlogRow);return babelHelpers.possibleConstructorReturn(this,(BlogRow.__proto__||Object.getPrototypeOf(BlogRow)).apply(this,arguments));}babelHelpers.createClass(BlogRow,[{key:'formatTime',value:function formatTime(
 publishedTime){
 var lastTime=new Date(publishedTime);
 var year=lastTime.getFullYear().toString();
@@ -70890,7 +70903,7 @@ var hour=this.zeroize(lastTime.getHours());
 var minute=this.zeroize(lastTime.getMinutes());
 
 return year+"-"+month+"-"+day+" "+hour+":"+minute;
-}},{key:"zeroize",value:function zeroize(
+}},{key:'zeroize',value:function zeroize(
 value,length){
 if(!length)length=2;
 value=String(value);
@@ -70898,7 +70911,7 @@ for(var i=0,zeros='';i<length-value.length;i++){
 zeros+='0';
 }
 return zeros+value;
-}},{key:"render",value:function render()
+}},{key:'render',value:function render()
 {
 return(
 _react2.default.createElement(_reactNative.View,{style:styles.wrapper},
@@ -70943,8 +70956,18 @@ _react2.default.createElement(_reactNative.Text,{style:styles.time},this.formatT
 var styles=_reactNative.StyleSheet.create({
 wrapper:{
 flex:1,
+marginHorizontal:16,
 height:175,
-backgroundColor:"#65D9E399"},
+backgroundColor:"#65D9E3",
+opacity:.9,
+borderRadius:6,
+shadowColor:'#333',
+shadowOffset:{
+width:3,
+height:3},
+
+shadowRadius:5,
+shadowOpacity:.8},
 
 section:{
 height:175,
@@ -71078,6 +71101,8 @@ flexDirection:"row",
 justifyContent:"space-around",
 alignItems:"center"}});
 }, 411, null, "CNBlog_RN/footer.js");
+__d(/* CNBlog_RN/icon/wallpaper.jpg */function(global, require, module, exports) {module.exports = require(171                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/icon","width":1080,"height":1920,"scales":[1],"hash":"7fbec081503ed4f58ffaaa2313aa95d1","name":"wallpaper","type":"jpg"}); // 171 = react-native/Libraries/Image/AssetRegistry
+}, 417, null, "CNBlog_RN/icon/wallpaper.jpg");
 ;require(215);
 ;require(0);
 //# sourceMappingURL=index.ios.map

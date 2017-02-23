@@ -68,8 +68,7 @@ export default class Content extends Component {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        marginHorizontal: 16
+        flex: 1
     },
     loading: {
       position: "absolute",

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import Dimensions from 'Dimensions';
+
+var {screenWidth, screenHeight} = Dimensions.get('window');
 
 export default class BlogRow extends Component {
     formatTime(publishedTime) {
@@ -64,8 +67,18 @@ export default class BlogRow extends Component {
 const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
+        marginHorizontal: 16,
         height: 175,
-        backgroundColor: "#65D9E399"
+        backgroundColor: "#65D9E3",
+        opacity: .9,
+        borderRadius: 6,
+        shadowColor: '#333',
+        shadowOffset: {
+            width: 3,
+            height: 3
+        },
+        shadowRadius: 5,
+        shadowOpacity: .8
     },
     section: {
         height: 175,
@@ -95,7 +108,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         width: 40,
         height: 40,
-        opacity : .3
+        opacity: .3
     },
     content: {
         paddingHorizontal: 20
