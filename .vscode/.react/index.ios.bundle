@@ -68601,25 +68601,47 @@ module.exports=throwOnWrongReactAPI;
 }, 402, null, "throwOnWrongReactAPI");
 __d(/* CNBlog_RN/app.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
 var _reactNative=require(12            ); // 12 = react-native
+var _content=require(409        );var _content2=babelHelpers.interopRequireDefault(_content); // 409 = ./content
+var _header=require(410       );var _header2=babelHelpers.interopRequireDefault(_header); // 410 = ./header
+var _footer=require(411       );var _footer2=babelHelpers.interopRequireDefault(_footer);var // 411 = ./footer
+
+App=function(_Component){babelHelpers.inherits(App,_Component);function App(){babelHelpers.classCallCheck(this,App);return babelHelpers.possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).apply(this,arguments));}babelHelpers.createClass(App,[{key:'render',value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_header2.default,null),
+_react2.default.createElement(_content2.default,null),
+_react2.default.createElement(_footer2.default,null)));
+
+
+}}]);return App;}(_react.Component);exports.default=App;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1}});
+}, 403, null, "CNBlog_RN/app.js");
+__d(/* CNBlog_RN/content.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
+var _reactNative=require(12            ); // 12 = react-native
 var _xmlParser=require(404          );var _xmlParser2=babelHelpers.interopRequireDefault(_xmlParser); // 404 = ./xmlParser
 var _row=require(408    );var _row2=babelHelpers.interopRequireDefault(_row); // 408 = ./row
 
 var DOMParser=require(405     ).DOMParser;var // 405 = xmldom
 
-App=function(_Component){babelHelpers.inherits(App,_Component);
-function App(props){babelHelpers.classCallCheck(this,App);var _this=babelHelpers.possibleConstructorReturn(this,(App.__proto__||Object.getPrototypeOf(App)).call(this,
+Content=function(_Component){babelHelpers.inherits(Content,_Component);
+function Content(props){babelHelpers.classCallCheck(this,Content);var _this=babelHelpers.possibleConstructorReturn(this,(Content.__proto__||Object.getPrototypeOf(Content)).call(this,
 props));
 var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});
 _this.state={
 loading:true,
 dataSource:ds.cloneWithRows([])};return _this;
 
-}babelHelpers.createClass(App,[{key:'componentWillMount',value:function componentWillMount()
+}babelHelpers.createClass(Content,[{key:'componentWillMount',value:function componentWillMount()
 {
 this.fetchApi();
 }},{key:'fetchApi',value:function fetchApi()
 {var _this2=this;
-var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/1/20";
+var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/1/40";
 fetch(url).
 then(function(response){return response.text();}).
 then(function(responseText){
@@ -68659,15 +68681,12 @@ size:'large'}))));
 
 
 
-}}]);return App;}(_react.Component);exports.default=App;
+}}]);return Content;}(_react.Component);exports.default=Content;
 
 
 var styles=_reactNative.StyleSheet.create({
-container:babelHelpers.extends({
+container:{
 flex:1},
-_reactNative.Platform.select({
-ios:{paddingTop:20}})),
-
 
 loading:{
 position:"absolute",
@@ -68678,7 +68697,7 @@ bottom:0,
 alignItems:"center",
 justifyContent:"center",
 backgroundColor:"rgba(0,0,0,.2)"}});
-}, 403, null, "CNBlog_RN/app.js");
+}, 409, null, "CNBlog_RN/content.js");
 __d(/* CNBlog_RN/xmlParser.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
 var _reactNative=require(12            ); // 12 = react-native
 
@@ -68693,10 +68712,10 @@ xml){
 var obj={};
 if(xml.nodeType==1){
 if(xml.attributes.length>0){
-obj["@attributes"]={};
+obj["attributes"]={};
 for(var j=0;j<xml.attributes.length;j++){
 var attribute=xml.attributes.item(j);
-obj["@attributes"][attribute.nodeName]=attribute.nodeValue;
+obj["attributes"][attribute.nodeName]=attribute.nodeValue;
 }
 }
 }else if(xml.nodeType==3){
@@ -70858,7 +70877,9 @@ Row=function(_Component){babelHelpers.inherits(Row,_Component);function Row(){ba
 {
 return(
 _react2.default.createElement(_reactNative.View,null,
-_react2.default.createElement(_reactNative.Text,null,this.props.title.text)));
+_react2.default.createElement(_reactNative.TouchableOpacity,null,
+_react2.default.createElement(_reactNative.Text,null,this.props.title.text))));
+
 
 
 }}]);return Row;}(_react.Component);exports.default=Row;
@@ -70868,6 +70889,73 @@ var styles=_reactNative.StyleSheet.create({
 default:{
 flex:1}});
 }, 408, null, "CNBlog_RN/row.js");
+__d(/* CNBlog_RN/header.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
+var _reactNative=require(12            );var // 12 = react-native
+
+Header=function(_Component){babelHelpers.inherits(Header,_Component);function Header(){babelHelpers.classCallCheck(this,Header);return babelHelpers.possibleConstructorReturn(this,(Header.__proto__||Object.getPrototypeOf(Header)).apply(this,arguments));}babelHelpers.createClass(Header,[{key:"render",value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.wrapper},
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.navigationButton},
+_react2.default.createElement(_reactNative.Text,null,"left")),
+
+_react2.default.createElement(_reactNative.Text,{style:styles.title},"CNBlog_RN"),
+_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.navigationButton},
+_react2.default.createElement(_reactNative.Text,null,"right")))));
+
+
+
+
+}}]);return Header;}(_react.Component);exports.default=Header;
+
+
+var styles=_reactNative.StyleSheet.create({
+wrapper:{
+height:64,
+backgroundColor:"#CCC"},
+
+container:babelHelpers.extends({
+flex:1,
+flexDirection:"row",
+justifyContent:"space-between",
+alignItems:"center"},
+_reactNative.Platform.select({
+ios:{paddingTop:20}})),
+
+
+title:{
+fontSize:20},
+
+navigationButton:{
+marginHorizontal:16,
+width:35}});
+}, 410, null, "CNBlog_RN/header.js");
+__d(/* CNBlog_RN/footer.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
+var _reactNative=require(12            );var // 12 = react-native
+
+Footer=function(_Component){babelHelpers.inherits(Footer,_Component);function Footer(){babelHelpers.classCallCheck(this,Footer);return babelHelpers.possibleConstructorReturn(this,(Footer.__proto__||Object.getPrototypeOf(Footer)).apply(this,arguments));}babelHelpers.createClass(Footer,[{key:"render",value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.TouchableOpacity,null,
+_react2.default.createElement(_reactNative.Text,null,"Blog List")),
+
+_react2.default.createElement(_reactNative.TouchableOpacity,null,
+_react2.default.createElement(_reactNative.Text,null,"Mine"))));
+
+
+
+}}]);return Footer;}(_react.Component);exports.default=Footer;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+height:49,
+flexDirection:"row",
+justifyContent:"space-around",
+alignItems:"center"}});
+}, 411, null, "CNBlog_RN/footer.js");
 ;require(215);
 ;require(0);
 //# sourceMappingURL=index.ios.map

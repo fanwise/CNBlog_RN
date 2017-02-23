@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import {View, Text, StyleSheet } from "react-native";
+import {View, Text, StyleSheet,TouchableOpacity } from "react-native";
 
 export default class Row extends Component {
     render() {
         return (
             <View>
-                <Text>{this.props.title.text}</Text>
+                <TouchableOpacity>
+                    <Text>{this.props.title.text}</Text>
+                </TouchableOpacity>
             </View>
         );
     }
