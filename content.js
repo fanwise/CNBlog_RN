@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, ActivityIndicator, WebView } from "react-native";
+import { View, Text, StyleSheet, ListView, ActivityIndicator, WebView, RefreshControl } from "react-native";
+import XmlParser from './xmlParser';
 import BlogRow from './blogRow';
 
 export default class Content extends Component {
@@ -9,7 +10,8 @@ export default class Content extends Component {
         this.state = {
             loading: true,
             dataSource: ds.cloneWithRows([]),
-            html: ""
+            html: "",
+            isRefreshing: false,
         }
     }
     componentWillMount() {
@@ -23,47 +25,52 @@ export default class Content extends Component {
         }
     }
     fetchBlogList() {
-        var url = 'https://api.cnblogs.com/api/blogposts/@sitehome?pageIndex=1&pageSize=20';
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer HkgUpM8pyyCZM2gjr8k0FORNkBM98UIbFnJ7-Tv1z2QduHeA1sDtNhJi9o3-glPeY4WOoAfCnGiCAYcvFZhAn9ch_qnQMTSaCAcCV0PCdLbEO-JCsqm2FQSffcAr2Yl2E-msKnKEAkZC5jkrueHKIgk9LHh1g76LkguaovOQxboHEX64FbzvJIy2XUGBvWDN9IaGpH8PwQpS5mr1exXOYg'
-            }
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
+        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/50";
+        fetch(url)
+            .then((response) => response.text())
+            .then((responseText) => {
+                var json = new XmlParser().parseXmlText(responseText);
                 this.setState({
                     loading: false,
-                    dataSource: this.state.dataSource.cloneWithRows(responseJson)
+                    isRefreshing: false,
+                    dataSource: this.state.dataSource.cloneWithRows(json.feed.entry)  
                 })
             })
             .catch((error) => {
-                console.error(error);
+                console.log('Error fetching the feed: ', error);
             });
     }
     fetchBlogDetial() {
-        var url = 'https://api.cnblogs.com/api/blogposts/' + this.props.blogId + '/body';
-        fetch(url, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer HkgUpM8pyyCZM2gjr8k0FORNkBM98UIbFnJ7-Tv1z2QduHeA1sDtNhJi9o3-glPeY4WOoAfCnGiCAYcvFZhAn9ch_qnQMTSaCAcCV0PCdLbEO-JCsqm2FQSffcAr2Yl2E-msKnKEAkZC5jkrueHKIgk9LHh1g76LkguaovOQxboHEX64FbzvJIy2XUGBvWDN9IaGpH8PwQpS5mr1exXOYg',
-                'Accept':'text/plain'
-            }
-        })
+        var url = 'http://wcf.open.cnblogs.com/blog/post/body/' + this.props.blogId;
+        fetch(url)
             .then((response) => response.text())
             .then((responseText) => {
+                var json = new XmlParser().parseXmlText(responseText);
                 this.setState({
                     loading: false,
-                    html: responseText
+                    html: json.string.text
                 })
             })
             .catch((error) => {
                 console.error(error);
             });
     }
+    onRefresh = () => {
+        this.setState({ isRefreshing: true });
+        setTimeout(() => {
+            this.fetchBlogList();
+        }, 5000);
+    };
     render() {
         const blogListComponent = (
             <ListView
+                refreshControl={
+                    <RefreshControl
+                        refreshing={this.state.isRefreshing}
+                        onRefresh={this.onRefresh}
+                        tintColor="#FFF"
+                    />
+                }
                 enableEmptySections
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
@@ -89,7 +96,7 @@ export default class Content extends Component {
                 style={{
                     backgroundColor: "#E5F9FF99"
                 }}
-                source={{html: this.state.html}}
+                source={{ html: this.state.html }}
             />
         )
         return (
