@@ -6,10 +6,10 @@ export default class Footer extends Component {
         return (
             <View style={styles.container}>
                 <TouchableOpacity>
-                    <Text>Blog List</Text>
+                    <Text style={styles.footerButtonText}>Blog List</Text>
                 </TouchableOpacity>
                  <TouchableOpacity>
-                    <Text>Mine</Text>
+                    <Text style={styles.footerButtonText}>Mine</Text>
                 </TouchableOpacity>
             </View>
         );
@@ -22,5 +22,9 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-around",
         alignItems: "center"
+    },
+    footerButtonText: {
+        fontSize: 18,
+        color: "#FFF"
     }
 });

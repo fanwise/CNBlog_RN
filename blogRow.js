@@ -26,7 +26,7 @@ export default class BlogRow extends Component {
     render() {
         return (
             <View style={styles.wrapper}>
-                <TouchableOpacity style={styles.section}>
+                <TouchableOpacity style={styles.section} onPress={() => {this.props.onSelectBlog(this.props.Title, this.props.Id);}}>
                     <View style={styles.header}>
                         <Text numberOfLines={2} style={styles.title}>{this.props.Title}</Text>
                         <Image

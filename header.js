@@ -6,13 +6,16 @@ export default class Header extends Component {
         return (
             <View style={styles.wrapper}>
                 <View style={styles.container}>
-                    <TouchableOpacity style={styles.navigationButton}>
-                        <Text>left</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.title}>CNBlog_RN</Text>
-                    <TouchableOpacity style={styles.navigationButton}>
-                        <Text>right</Text>
-                    </TouchableOpacity>
+                    {(this.props.index > 0) && <TouchableOpacity style={styles.navigationButton} onPress={this.props.onBack}>
+                        <Text style={styles.buttonText}>&lt;返回</Text>
+                    </TouchableOpacity>}
+                    
+                    <View style={styles.titleContainer}>
+                        <Text numberOfLines={1} style={styles.title}>{this.props.title}</Text>
+                    </View>
+                    {(this.props.index > 0) && <TouchableOpacity style={styles.navigationButton}>
+                        <Text style={styles.buttonText}></Text>
+                    </TouchableOpacity>}
                 </View>
             </View>
         );
@@ -32,11 +35,20 @@ const styles = StyleSheet.create({
             ios: { paddingTop: 20 }
         })
     },
+    titleContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     title: {
-        fontSize: 20
+        fontSize: 20,
+        color: "#FFF"
     },
     navigationButton: {
         marginHorizontal: 16,
-        width: 35
+        width: 40
+    },
+    buttonText: {
+        color: "#FFF"
     }
 });

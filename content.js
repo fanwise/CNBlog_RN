@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, ActivityIndicator } from "react-native";
+import { View, Text, StyleSheet, ListView, ActivityIndicator, WebView } from "react-native";
 import BlogRow from './blogRow';
 
 export default class Content extends Component {
@@ -8,14 +8,22 @@ export default class Content extends Component {
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
             loading: true,
-            dataSource: ds.cloneWithRows([])
+            dataSource: ds.cloneWithRows([]),
+            html: ""
         }
     }
     componentWillMount() {
         this.fetchApi();
     }
     fetchApi() {
-        var url = 'https://api.cnblogs.com/api/blogposts/@sitehome?pageIndex=1&pageSize=50';
+        if (this.props.contentType === 'list') {
+            this.fetchBlogList()
+        } else if (this.props.contentType === 'detial') {
+            this.fetchBlogDetial()
+        }
+    }
+    fetchBlogList() {
+        var url = 'https://api.cnblogs.com/api/blogposts/@sitehome?pageIndex=1&pageSize=20';
         fetch(url, {
             method: 'GET',
             headers: {
@@ -33,28 +41,61 @@ export default class Content extends Component {
                 console.error(error);
             });
     }
+    fetchBlogDetial() {
+        var url = 'https://api.cnblogs.com/api/blogposts/' + this.props.blogId + '/body';
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer HkgUpM8pyyCZM2gjr8k0FORNkBM98UIbFnJ7-Tv1z2QduHeA1sDtNhJi9o3-glPeY4WOoAfCnGiCAYcvFZhAn9ch_qnQMTSaCAcCV0PCdLbEO-JCsqm2FQSffcAr2Yl2E-msKnKEAkZC5jkrueHKIgk9LHh1g76LkguaovOQxboHEX64FbzvJIy2XUGBvWDN9IaGpH8PwQpS5mr1exXOYg',
+                'Accept':'text/plain'
+            }
+        })
+            .then((response) => response.text())
+            .then((responseText) => {
+                this.setState({
+                    loading: false,
+                    html: responseText
+                })
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
     render() {
+        const blogListComponent = (
+            <ListView
+                enableEmptySections
+                showsVerticalScrollIndicator={false}
+                dataSource={this.state.dataSource}
+                renderRow={({...value}) => {
+                    return (
+                        <BlogRow
+                            onSelectBlog={this.props.onForward}
+                            {...value}
+                        />
+                    )
+                }}
+                renderSeparator={(sectionId, rowId) => {
+                    return (
+                        <View key={rowId}>
+                            <Text></Text>
+                        </View>
+                    )
+                }}
+            />
+        )
+        const blogDetialComponent = (
+            <WebView
+                style={{
+                    backgroundColor: "#E5F9FF99"
+                }}
+                source={{html: this.state.html}}
+            />
+        )
         return (
             <View style={styles.container}>
-                <ListView
-                    enableEmptySections
-                    showsVerticalScrollIndicator={false}
-                    dataSource={this.state.dataSource}
-                    renderRow={({...value}) => {
-                        return (
-                            <BlogRow
-                                {...value}
-                            />
-                        )
-                    }}
-                    renderSeparator={(sectionId, rowId) => {
-                        return (
-                            <View key={rowId}>
-                                <Text></Text>
-                            </View>
-                        )
-                    }}
-                />
+                {/*{blogListComponent}*/}
+                {(this.props.contentType === 'list') ? blogListComponent : blogDetialComponent}
                 {this.state.loading && <View style={styles.loading}>
                     <ActivityIndicator
                         animating
@@ -78,6 +119,6 @@ const styles = StyleSheet.create({
         bottom: 0,
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "rgba(0,0,0,.2)"
+        backgroundColor: "rgba(180, 180, 180, .3)"
     }
 });
