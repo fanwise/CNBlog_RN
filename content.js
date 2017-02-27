@@ -9,12 +9,15 @@ export default class Content extends Component {
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
         this.state = {
             loading: true,
+            loadingMore: false,
+            items: [],
             dataSource: ds.cloneWithRows([]),
             html: "",
-            isRefreshing: false,
+            page : 1,
+            isRefreshing: false
         }
     }
-    componentWillMount() {
+    componentDidMount() {
         this.fetchApi();
     }
     fetchApi() {
@@ -25,16 +28,18 @@ export default class Content extends Component {
         }
     }
     fetchBlogList() {
-        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/50";
+        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/1/20";
         fetch(url)
             .then((response) => response.text())
             .then((responseText) => {
                 var json = new XmlParser().parseXmlText(responseText);
+                const newItems = [... this.state.items, ... json.feed.entry];
                 this.setState({
                     loading: false,
                     isRefreshing: false,
-                    dataSource: this.state.dataSource.cloneWithRows(json.feed.entry)  
-                })
+                    items: newItems,
+                    dataSource: this.state.dataSource.cloneWithRows(newItems)
+                });
             })
             .catch((error) => {
                 console.log('Error fetching the feed: ', error);
@@ -55,12 +60,44 @@ export default class Content extends Component {
                 console.error(error);
             });
     }
+    fetchMore() {
+        var url = "http://wcf.open.cnblogs.com/blog/sitehome/paged/" + (this.state.page + 1) +"/20";
+        fetch(url)
+            .then((response) => response.text())
+            .then((responseText) => {
+                var json = new XmlParser().parseXmlText(responseText);
+                const newItems = [... this.state.items, ... json.feed.entry];
+                this.setState({
+                    loadingMore: false,
+                    isRefreshing: false,
+                    items: newItems,
+                    dataSource: this.state.dataSource.cloneWithRows(newItems),
+                    page: this.state.page + 1
+                });
+            })
+            .catch((error) => {
+                console.log('Error fetching the feed: ', error);
+            });
+    }
     onRefresh = () => {
         this.setState({ isRefreshing: true });
         setTimeout(() => {
             this.fetchBlogList();
         }, 5000);
     };
+    onEndReached = () => {
+        if (true) {
+            this.setState({ loadingMore: true });
+            this.fetchMore();
+        }
+    }
+    renderFooter = () => {
+        if (this.state.loadingMore) {
+            return <ActivityIndicator/>;
+        }else {
+            return <View/>
+        }
+    }
     render() {
         const blogListComponent = (
             <ListView
@@ -74,6 +111,8 @@ export default class Content extends Component {
                 enableEmptySections
                 showsVerticalScrollIndicator={false}
                 dataSource={this.state.dataSource}
+                onEndReached={this.onEndReached}
+                renderFooter={this.renderFooter}
                 renderRow={({...value}) => {
                     return (
                         <BlogRow

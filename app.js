@@ -44,14 +44,14 @@ export default class App extends Component {
                             <Content
                                 onForward={(title, Id) => {
                                     const nextIndex = route.index + 1;
+                                    this.setState({
+                                        contentType: ContentType.Detial,
+                                        blogId: Id
+                                    });
                                     navigator.push({
                                         title: title,
                                         index: nextIndex,
                                     });
-                                    this.setState({
-                                        contentType: ContentType.Detial,
-                                        blogId: Id
-                                    })
                                 }}
                                 contentType={this.state.contentType}
                                 blogId={this.state.blogId}

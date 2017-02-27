@@ -68645,13 +68645,13 @@ contentType:ContentType.List});
 _react2.default.createElement(_content2.default,{
 onForward:function onForward(title,Id){
 var nextIndex=route.index+1;
-navigator.push({
-title:title,
-index:nextIndex});
-
 _this2.setState({
 contentType:ContentType.Detial,
 blogId:Id});
+
+navigator.push({
+title:title,
+index:nextIndex});
 
 },
 contentType:_this2.state.contentType,
@@ -68734,15 +68734,63 @@ props));_this.
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 onRefresh=function(){
 _this.setState({isRefreshing:true});
 setTimeout(function(){
 _this.fetchBlogList();
 },5000);
-};var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});_this.state={loading:true,dataSource:ds.cloneWithRows([]),html:"",isRefreshing:false};return _this;}babelHelpers.createClass(Content,[{key:'componentWillMount',value:function componentWillMount(){this.fetchApi();}},{key:'fetchApi',value:function fetchApi(){if(this.props.contentType==='list'){this.fetchBlogList();}else if(this.props.contentType==='detial'){this.fetchBlogDetial();}}},{key:'fetchBlogList',value:function fetchBlogList(){var _this2=this;var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/1/50";fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);_this2.setState({loading:false,isRefreshing:false,dataSource:_this2.state.dataSource.cloneWithRows(json.feed.entry)});}).catch(function(error){console.log('Error fetching the feed: ',error);});}},{key:'fetchBlogDetial',value:function fetchBlogDetial(){var _this3=this;var url='http://wcf.open.cnblogs.com/blog/post/body/'+this.props.blogId;fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);_this3.setState({loading:false,html:json.string.text});}).catch(function(error){console.error(error);});}},{key:'render',value:function render()
-{var _this4=this;
+};_this.
+onEndReached=function(){
+if(true){
+_this.setState({loadingMore:true});
+_this.fetchMore();
+}
+};_this.
+renderFooter=function(){
+if(_this.state.loadingMore){
+return _react2.default.createElement(_reactNative.ActivityIndicator,null);
+}else{
+return _react2.default.createElement(_reactNative.View,null);
+}
+
+};_this.
+handleScroll=function(event){
+_this.setState({
+scrollOffset:event.nativeEvent.contentOffset.y});
+
+};var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});_this.state={loading:true,loadingMore:false,items:[],dataSource:ds.cloneWithRows([]),html:"",page:1,isRefreshing:false,scrollOffset:0};return _this;}babelHelpers.createClass(Content,[{key:'componentWillMount',value:function componentWillMount(){}},{key:'componentDidMount',value:function componentDidMount(){this.fetchApi();}},{key:'fetchApi',value:function fetchApi(){if(this.props.contentType==='list'){this.fetchBlogList();}else if(this.props.contentType==='detial'){this.fetchBlogDetial();}}},{key:'fetchBlogList',value:function fetchBlogList(){var _this2=this;var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/1/20";fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);var newItems=[].concat(babelHelpers.toConsumableArray(_this2.state.items),babelHelpers.toConsumableArray(json.feed.entry));_this2.setState({loading:false,isRefreshing:false,items:newItems,dataSource:_this2.state.dataSource.cloneWithRows(newItems)});}).catch(function(error){console.log('Error fetching the feed: ',error);});}},{key:'fetchBlogDetial',value:function fetchBlogDetial(){var _this3=this;var url='http://wcf.open.cnblogs.com/blog/post/body/'+this.props.blogId;fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);_this3.setState({loading:false,html:json.string.text});}).catch(function(error){console.error(error);});}},{key:'fetchMore',value:function fetchMore(){var _this4=this;var url="http://wcf.open.cnblogs.com/blog/sitehome/paged/"+(this.state.page+1)+"/20";fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);var newItems=[].concat(babelHelpers.toConsumableArray(_this4.state.items),babelHelpers.toConsumableArray(json.feed.entry));_this4.setState({loadingMore:false,isRefreshing:false,items:newItems,dataSource:_this4.state.dataSource.cloneWithRows(newItems),page:_this4.state.page+1});}).catch(function(error){console.log('Error fetching the feed: ',error);});}},{key:'render',value:function render()
+{var _this5=this;
 var blogListComponent=
-_react2.default.createElement(_reactNative.ListView,{
+_react2.default.createElement(_reactNative.ListView,{ref:'listView',
 refreshControl:
 _react2.default.createElement(_reactNative.RefreshControl,{
 refreshing:this.state.isRefreshing,
@@ -68750,13 +68798,16 @@ onRefresh:this.onRefresh,
 tintColor:'#FFF'}),
 
 
+onScroll:this.handleScroll,
 enableEmptySections:true,
 showsVerticalScrollIndicator:false,
 dataSource:this.state.dataSource,
+onEndReached:this.onEndReached,
+renderFooter:this.renderFooter,
 renderRow:function renderRow(_ref){var value=babelHelpers.objectWithoutProperties(_ref,[]);
 return(
 _react2.default.createElement(_blogRow2.default,babelHelpers.extends({
-onSelectBlog:_this4.props.onForward},
+onSelectBlog:_this5.props.onForward},
 value)));
 
 
