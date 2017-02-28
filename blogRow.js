@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Dimensions from 'Dimensions';
+import BlogDetailComponent from './blogDetailComponent';
 
 var {screenWidth, screenHeight} = Dimensions.get('window');
 
@@ -13,7 +14,7 @@ export default class BlogRow extends Component {
         var hour = this.zeroize(lastTime.getHours());
         var minute = this.zeroize(lastTime.getMinutes());
 
-        return year + "-" + month + "-" + day + " " + hour + ":" + minute;
+        return year + '-' + month + '-' + day + ' ' + hour + ':' + minute;
     }
     zeroize(value, length) {
         if (!length) length = 2;
@@ -22,11 +23,24 @@ export default class BlogRow extends Component {
             zeros += '0';
         }
         return zeros + value;
-    };
+    }
+    handlePressRow() {
+        const { navigator } = this.props;
+        if (navigator) {
+            console.log('press row');
+            const nextIndex = this.props.route.index + 1;
+            navigator.push({
+                title: this.props.title.text,
+                index: nextIndex,
+                blogId: this.props.id.text,
+                component: BlogDetailComponent
+            })
+        }
+    }
     render() {
         return (
             <View style={styles.wrapper}>
-                <TouchableOpacity style={styles.section} onPress={() => {this.props.onSelectBlog(this.props.title.text, this.props.id.text);}}>
+                <TouchableOpacity style={styles.section} onPress={this.handlePressRow.bind(this)}>
                     <View style={styles.header}>
                         <Text numberOfLines={2} style={styles.title}>{this.props.title.text}</Text>
                         <Image
@@ -68,8 +82,9 @@ const styles = StyleSheet.create({
     wrapper: {
         flex: 1,
         marginHorizontal: 16,
+        marginVertical: 8,
         height: 175,
-        backgroundColor: "#65D9E3",
+        backgroundColor: '#65D9E3',
         opacity: .9,
         borderRadius: 6,
         shadowColor: '#333',
@@ -82,22 +97,22 @@ const styles = StyleSheet.create({
     },
     section: {
         height: 175,
-        flexDirection: "column",
-        justifyContent: "space-between"
+        flexDirection: 'column',
+        justifyContent: 'space-between'
     },
     header: {
         paddingTop: 20,
         paddingRight: 10,
         paddingBottom: 10,
         paddingLeft: 20,
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center"
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     title: {
         fontSize: 22,
         width: 260,
-        color: "#FFF"
+        color: '#FFF'
     },
     avator: {
         borderRadius: 20,
@@ -115,17 +130,17 @@ const styles = StyleSheet.create({
     },
     summary: {
         fontSize: 14,
-        color: "#FFF"
+        color: '#FFF'
     },
     footer: {
         marginHorizontal: 20,
         marginVertical: 15,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between"
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     icons: {
-        flexDirection: "row"
+        flexDirection: 'row'
     },
     icon: {
         width: 16,
@@ -133,7 +148,7 @@ const styles = StyleSheet.create({
     },
     iconNumber: {
         paddingHorizontal: 5,
-        color: "#FFF"
+        color: '#FFF'
     },
     time: {
         color: 'rgba(255, 255, 255, 1.0)'
