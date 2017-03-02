@@ -68746,8 +68746,8 @@ color:"#FFF"}});
 }, 411, null, "CNBlog_RN/footer.js");
 __d(/* CNBlog_RN/blogListComponent.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
 var _reactNative=require(12            ); // 12 = react-native
-var _xmlParser=require(404          );var _xmlParser2=babelHelpers.interopRequireDefault(_xmlParser); // 404 = ./xmlParser
-var _blogRow=require(412        );var _blogRow2=babelHelpers.interopRequireDefault(_blogRow);var // 412 = ./blogRow
+var _blogRow=require(412        );var _blogRow2=babelHelpers.interopRequireDefault(_blogRow); // 412 = ./blogRow
+var _network=require(421        );var _network2=babelHelpers.interopRequireDefault(_network);var // 421 = ./network
 
 BlogListComponent=function(_Component){babelHelpers.inherits(BlogListComponent,_Component);
 function BlogListComponent(props){babelHelpers.classCallCheck(this,BlogListComponent);var _this=babelHelpers.possibleConstructorReturn(this,(BlogListComponent.__proto__||Object.getPrototypeOf(BlogListComponent)).call(this,
@@ -68765,47 +68765,29 @@ props));_this.
 
 
 
+fetchInitBlogList=function(){
+_network2.default.fetchBlogList(1,_this.blogListFetchCallback);
+};_this.
+blogListFetchCallback=function(json){
+var newItems=[].concat(babelHelpers.toConsumableArray(_this.state.items),babelHelpers.toConsumableArray(json.feed.entry));
+_this.setState({
+loading:false,
+isRefreshing:false,
+items:newItems,
+dataSource:_this.state.dataSource.cloneWithRows(newItems)});
 
+};_this.
+fetchMore=function(){
+_network2.default.fetchBlogList(_this.state.page+1,_this.blogListFetchCallback);
+_this.setState({
+loadingMore:false,
+page:_this.state.page+1});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};_this.
 onRefresh=function(){
 _this.setState({isRefreshing:true});
 setTimeout(function(){
-_this.fetchApi();
+_this.fetchInitBlogList();
 },3000);
 };_this.
 onEndReached=function(){
@@ -68820,8 +68802,8 @@ return _react2.default.createElement(_reactNative.ActivityIndicator,null);
 }else{
 return _react2.default.createElement(_reactNative.View,null);
 }
-};var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});_this.state={loading:true,loadingMore:false,items:[],dataSource:ds.cloneWithRows([]),page:1,isRefreshing:false};return _this;}babelHelpers.createClass(BlogListComponent,[{key:'componentDidMount',value:function componentDidMount(){this.fetchApi();}},{key:'fetchApi',value:function fetchApi(){var _this2=this;var url='http://wcf.open.cnblogs.com/blog/sitehome/paged/1/20';fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);var newItems=[].concat(babelHelpers.toConsumableArray(_this2.state.items),babelHelpers.toConsumableArray(json.feed.entry));_this2.setState({loading:false,isRefreshing:false,items:newItems,dataSource:_this2.state.dataSource.cloneWithRows(newItems)});}).catch(function(error){console.log('Error fetching the feed: ',error);});}},{key:'fetchMore',value:function fetchMore(){var _this3=this;var url='http://wcf.open.cnblogs.com/blog/sitehome/paged/'+(this.state.page+1)+'/20';fetch(url).then(function(response){return response.text();}).then(function(responseText){var json=new _xmlParser2.default().parseXmlText(responseText);var newItems=[].concat(babelHelpers.toConsumableArray(_this3.state.items),babelHelpers.toConsumableArray(json.feed.entry));_this3.setState({loadingMore:false,isRefreshing:false,items:newItems,dataSource:_this3.state.dataSource.cloneWithRows(newItems),page:_this3.state.page+1});}).catch(function(error){console.log('Error fetching the feed: ',error);});}},{key:'render',value:function render()
-{var _this4=this;
+};var ds=new _reactNative.ListView.DataSource({rowHasChanged:function rowHasChanged(r1,r2){return r1!==r2;}});_this.state={loading:true,loadingMore:false,isRefreshing:false,items:[],dataSource:ds.cloneWithRows([]),page:1};return _this;}babelHelpers.createClass(BlogListComponent,[{key:'componentDidMount',value:function componentDidMount(){this.fetchInitBlogList();}},{key:'render',value:function render()
+{var _this2=this;
 return(
 _react2.default.createElement(_reactNative.View,{style:styles.container},
 _react2.default.createElement(_reactNative.ListView,{ref:'listView',
@@ -68840,13 +68822,12 @@ renderFooter:this.renderFooter,
 renderRow:function renderRow(_ref){var value=babelHelpers.objectWithoutProperties(_ref,[]);
 return(
 _react2.default.createElement(_blogRow2.default,babelHelpers.extends({
-route:_this4.props.route,
-navigator:_this4.props.navigator},
+route:_this2.props.route,
+navigator:_this2.props.navigator},
 value)));
 
 
 }}),
-
 
 this.state.loading&&_react2.default.createElement(_reactNative.View,{style:styles.loading},
 _react2.default.createElement(_reactNative.ActivityIndicator,{
@@ -68873,6 +68854,225 @@ alignItems:'center',
 justifyContent:'center',
 backgroundColor:'rgba(180, 180, 180, .3)'}});
 }, 418, null, "CNBlog_RN/blogListComponent.js");
+__d(/* CNBlog_RN/blogRow.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
+var _reactNative=require(12            ); // 12 = react-native
+var _Dimensions=require(101         );var _Dimensions2=babelHelpers.interopRequireDefault(_Dimensions); // 101 = Dimensions
+var _blogDetailComponent=require(419                    );var _blogDetailComponent2=babelHelpers.interopRequireDefault(_blogDetailComponent); // 419 = ./blogDetailComponent
+var _utils=require(420      );var _utils2=babelHelpers.interopRequireDefault(_utils);var _Dimensions$get= // 420 = ./utils
+
+_Dimensions2.default.get('window'),screenWidth=_Dimensions$get.screenWidth,screenHeight=_Dimensions$get.screenHeight;var
+
+BlogRow=function(_Component){babelHelpers.inherits(BlogRow,_Component);function BlogRow(){babelHelpers.classCallCheck(this,BlogRow);return babelHelpers.possibleConstructorReturn(this,(BlogRow.__proto__||Object.getPrototypeOf(BlogRow)).apply(this,arguments));}babelHelpers.createClass(BlogRow,[{key:'handlePressRow',value:function handlePressRow()
+{var
+navigator=this.props.navigator;
+if(navigator){
+var nextIndex=this.props.route.index+1;
+navigator.push({
+title:this.props.title.text,
+index:nextIndex,
+blogId:this.props.id.text,
+component:_blogDetailComponent2.default});
+
+}
+}},{key:'render',value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.wrapper},
+_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.section,onPress:this.handlePressRow.bind(this)},
+_react2.default.createElement(_reactNative.View,{style:styles.header},
+_react2.default.createElement(_reactNative.Text,{numberOfLines:2,style:styles.title},this.props.title.text),
+_react2.default.createElement(_reactNative.Image,{
+source:this.props.author.avatar.text?{uri:this.props.author.avatar.text}:require(416                ), // 416 = ./icon/avator.jpg
+style:this.props.author.avatar.text?styles.avator:styles.defaultAvator})),
+
+_react2.default.createElement(_reactNative.View,{style:styles.content},
+_react2.default.createElement(_reactNative.Text,{numberOfLines:3,style:styles.summary},this.props.summary.text)),
+
+_react2.default.createElement(_reactNative.View,{style:styles.footer},
+_react2.default.createElement(_reactNative.View,{style:styles.icons},
+_react2.default.createElement(_reactNative.Image,{
+style:styles.icon,
+source:require(414              )}), // 414 = ./icon/read.png
+
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.views.text),
+_react2.default.createElement(_reactNative.Image,{
+style:styles.icon,
+source:require(413              )}), // 413 = ./icon/like.png
+
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.diggs.text),
+_react2.default.createElement(_reactNative.Image,{
+style:styles.icon,
+source:require(415                 )}), // 415 = ./icon/comment.png
+
+_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.comments.text)),
+
+_react2.default.createElement(_reactNative.View,null,
+_react2.default.createElement(_reactNative.Text,{style:styles.time},_utils2.default.formatTime(this.props.published.text)))))));
+
+
+
+
+
+}}]);return BlogRow;}(_react.Component);exports.default=BlogRow;
+
+
+var styles=_reactNative.StyleSheet.create({
+wrapper:{
+flex:1,
+marginHorizontal:16,
+marginVertical:8,
+height:175,
+backgroundColor:'#65D9E3',
+opacity:.9,
+borderRadius:6,
+shadowColor:'#333',
+shadowOffset:{
+width:3,
+height:3},
+
+shadowRadius:5,
+shadowOpacity:.8},
+
+section:{
+height:175,
+flexDirection:'column',
+justifyContent:'space-between'},
+
+header:{
+paddingTop:20,
+paddingRight:10,
+paddingBottom:10,
+paddingLeft:20,
+flexDirection:'row',
+justifyContent:'space-between',
+alignItems:'center'},
+
+title:{
+fontSize:22,
+width:260,
+color:'#FFF'},
+
+avator:{
+borderRadius:20,
+width:40,
+height:40},
+
+defaultAvator:{
+borderRadius:20,
+width:40,
+height:40,
+opacity:.3},
+
+content:{
+paddingHorizontal:20},
+
+summary:{
+fontSize:14,
+color:'#FFF'},
+
+footer:{
+marginHorizontal:20,
+marginVertical:15,
+flexDirection:'row',
+alignItems:'center',
+justifyContent:'space-between'},
+
+icons:{
+flexDirection:'row'},
+
+icon:{
+width:16,
+height:16},
+
+iconNumber:{
+paddingHorizontal:5,
+color:'#FFF'},
+
+time:{
+color:'rgba(255, 255, 255, 1.0)'}});
+}, 412, null, "CNBlog_RN/blogRow.js");
+__d(/* CNBlog_RN/blogDetailComponent.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
+var _reactNative=require(12            ); // 12 = react-native
+var _network=require(421        );var _network2=babelHelpers.interopRequireDefault(_network);var // 421 = ./network
+
+BlogDetailComponent=function(_Component){babelHelpers.inherits(BlogDetailComponent,_Component);
+function BlogDetailComponent(props){babelHelpers.classCallCheck(this,BlogDetailComponent);var _this=babelHelpers.possibleConstructorReturn(this,(BlogDetailComponent.__proto__||Object.getPrototypeOf(BlogDetailComponent)).call(this,
+props));_this.
+
+
+
+
+
+
+
+
+blogDetailfetchCallback=function(json){
+_this.setState({
+loading:false,
+html:json.string.text});
+
+};_this.state={loading:false,html:''};return _this;}babelHelpers.createClass(BlogDetailComponent,[{key:'componentDidMount',value:function componentDidMount(){_network2.default.fetchBlogDetail(this.props.route.blogId,this.blogDetailfetchCallback);}},{key:'render',value:function render()
+{
+return(
+_react2.default.createElement(_reactNative.View,{style:styles.container},
+_react2.default.createElement(_reactNative.WebView,{
+style:{backgroundColor:'#E5F9FF99'},
+source:{html:this.state.html}}),
+
+this.state.loading&&_react2.default.createElement(_reactNative.View,{style:styles.loading},
+_react2.default.createElement(ActivityIndicator,{
+animating:true,
+size:'large'}))));
+
+
+
+
+}}]);return BlogDetailComponent;}(_react.Component);exports.default=BlogDetailComponent;
+
+
+var styles=_reactNative.StyleSheet.create({
+container:{
+flex:1},
+
+loading:{
+position:'absolute',
+left:0,
+top:0,
+right:0,
+bottom:0,
+alignItems:'center',
+justifyContent:'center',
+backgroundColor:'rgba(180, 180, 180, .3)'}});
+}, 419, null, "CNBlog_RN/blogDetailComponent.js");
+__d(/* CNBlog_RN/network.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _xmlParser=require(404          );var _xmlParser2=babelHelpers.interopRequireDefault(_xmlParser); // 404 = ./xmlParser
+
+var blogListBaseUrl='http://wcf.open.cnblogs.com/blog/sitehome/paged/';
+var itemsInEachPage=20;
+var blogDetailBaseUrl='http://wcf.open.cnblogs.com/blog/post/body/';var
+
+Network=function(){function Network(){babelHelpers.classCallCheck(this,Network);}babelHelpers.createClass(Network,null,[{key:'fetchApi',value:function fetchApi(
+url,callbackFunc){
+fetch(url).
+then(function(response){return response.text();}).
+then(function(responseText){
+var json=new _xmlParser2.default().parseXmlText(responseText);
+callbackFunc(json);
+}).
+catch(function(error){
+console.log('Error fetching the feed: ',error);
+});
+}},{key:'fetchBlogList',value:function fetchBlogList(
+
+page,callbackFunc){
+var url=blogListBaseUrl+page+'/'+itemsInEachPage;
+this.fetchApi(url,callbackFunc);
+}},{key:'fetchBlogDetail',value:function fetchBlogDetail(
+
+blogId,callbackFunc){
+var url=blogDetailBaseUrl+blogId;
+this.fetchApi(url,callbackFunc);
+}}]);return Network;}();exports.default=Network;
+}, 421, null, "CNBlog_RN/network.js");
 __d(/* CNBlog_RN/xmlParser.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
 var _reactNative=require(12            ); // 12 = react-native
 
@@ -71045,208 +71245,7 @@ object['$$'+key]=value;
 exports.DOMImplementation=DOMImplementation;
 exports.XMLSerializer=XMLSerializer;
 }, 407, null, "xmldom/dom.js");
-__d(/* CNBlog_RN/blogRow.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
-var _reactNative=require(12            ); // 12 = react-native
-var _Dimensions=require(101         );var _Dimensions2=babelHelpers.interopRequireDefault(_Dimensions); // 101 = Dimensions
-var _blogDetailComponent=require(419                    );var _blogDetailComponent2=babelHelpers.interopRequireDefault(_blogDetailComponent); // 419 = ./blogDetailComponent
-var _utils=require(420      );var _utils2=babelHelpers.interopRequireDefault(_utils);var _Dimensions$get= // 420 = ./utils
-
-_Dimensions2.default.get('window'),screenWidth=_Dimensions$get.screenWidth,screenHeight=_Dimensions$get.screenHeight;var
-
-BlogRow=function(_Component){babelHelpers.inherits(BlogRow,_Component);function BlogRow(){babelHelpers.classCallCheck(this,BlogRow);return babelHelpers.possibleConstructorReturn(this,(BlogRow.__proto__||Object.getPrototypeOf(BlogRow)).apply(this,arguments));}babelHelpers.createClass(BlogRow,[{key:'handlePressRow',value:function handlePressRow()
-{var
-navigator=this.props.navigator;
-if(navigator){
-var nextIndex=this.props.route.index+1;
-navigator.push({
-title:this.props.title.text,
-index:nextIndex,
-blogId:this.props.id.text,
-component:_blogDetailComponent2.default});
-
-}
-}},{key:'render',value:function render()
-{
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.wrapper},
-_react2.default.createElement(_reactNative.TouchableOpacity,{style:styles.section,onPress:this.handlePressRow.bind(this)},
-_react2.default.createElement(_reactNative.View,{style:styles.header},
-_react2.default.createElement(_reactNative.Text,{numberOfLines:2,style:styles.title},this.props.title.text),
-_react2.default.createElement(_reactNative.Image,{
-source:this.props.author.avatar.text?{uri:this.props.author.avatar.text}:require(416                ), // 416 = ./icon/avator.jpg
-style:this.props.author.avatar.text?styles.avator:styles.defaultAvator})),
-
-_react2.default.createElement(_reactNative.View,{style:styles.content},
-_react2.default.createElement(_reactNative.Text,{numberOfLines:3,style:styles.summary},this.props.summary.text)),
-
-_react2.default.createElement(_reactNative.View,{style:styles.footer},
-_react2.default.createElement(_reactNative.View,{style:styles.icons},
-_react2.default.createElement(_reactNative.Image,{
-style:styles.icon,
-source:require(414              )}), // 414 = ./icon/read.png
-
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.views.text),
-_react2.default.createElement(_reactNative.Image,{
-style:styles.icon,
-source:require(413              )}), // 413 = ./icon/like.png
-
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.diggs.text),
-_react2.default.createElement(_reactNative.Image,{
-style:styles.icon,
-source:require(415                 )}), // 415 = ./icon/comment.png
-
-_react2.default.createElement(_reactNative.Text,{style:styles.iconNumber},this.props.comments.text)),
-
-_react2.default.createElement(_reactNative.View,null,
-_react2.default.createElement(_reactNative.Text,{style:styles.time},_utils2.default.formatTime(this.props.published.text)))))));
-
-
-
-
-
-}}]);return BlogRow;}(_react.Component);exports.default=BlogRow;
-
-
-var styles=_reactNative.StyleSheet.create({
-wrapper:{
-flex:1,
-marginHorizontal:16,
-marginVertical:8,
-height:175,
-backgroundColor:'#65D9E3',
-opacity:.9,
-borderRadius:6,
-shadowColor:'#333',
-shadowOffset:{
-width:3,
-height:3},
-
-shadowRadius:5,
-shadowOpacity:.8},
-
-section:{
-height:175,
-flexDirection:'column',
-justifyContent:'space-between'},
-
-header:{
-paddingTop:20,
-paddingRight:10,
-paddingBottom:10,
-paddingLeft:20,
-flexDirection:'row',
-justifyContent:'space-between',
-alignItems:'center'},
-
-title:{
-fontSize:22,
-width:260,
-color:'#FFF'},
-
-avator:{
-borderRadius:20,
-width:40,
-height:40},
-
-defaultAvator:{
-borderRadius:20,
-width:40,
-height:40,
-opacity:.3},
-
-content:{
-paddingHorizontal:20},
-
-summary:{
-fontSize:14,
-color:'#FFF'},
-
-footer:{
-marginHorizontal:20,
-marginVertical:15,
-flexDirection:'row',
-alignItems:'center',
-justifyContent:'space-between'},
-
-icons:{
-flexDirection:'row'},
-
-icon:{
-width:16,
-height:16},
-
-iconNumber:{
-paddingHorizontal:5,
-color:'#FFF'},
-
-time:{
-color:'rgba(255, 255, 255, 1.0)'}});
-}, 412, null, "CNBlog_RN/blogRow.js");
-__d(/* CNBlog_RN/blogDetailComponent.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var _react=require(279    );var _react2=babelHelpers.interopRequireDefault(_react); // 279 = react
-var _reactNative=require(12            ); // 12 = react-native
-var _xmlParser=require(404          );var _xmlParser2=babelHelpers.interopRequireDefault(_xmlParser);var // 404 = ./xmlParser
-
-BlogDetailComponent=function(_Component){babelHelpers.inherits(BlogDetailComponent,_Component);
-function BlogDetailComponent(props){babelHelpers.classCallCheck(this,BlogDetailComponent);var _this=babelHelpers.possibleConstructorReturn(this,(BlogDetailComponent.__proto__||Object.getPrototypeOf(BlogDetailComponent)).call(this,
-props));
-_this.state={
-loading:false,
-html:''};return _this;
-
-}babelHelpers.createClass(BlogDetailComponent,[{key:'componentDidMount',value:function componentDidMount()
-{
-this.fetchApi();
-}},{key:'fetchApi',value:function fetchApi()
-{var _this2=this;
-var url='http://wcf.open.cnblogs.com/blog/post/body/'+this.props.route.blogId;
-fetch(url).
-then(function(response){return response.text();}).
-then(function(responseText){
-var json=new _xmlParser2.default().parseXmlText(responseText);
-_this2.setState({
-loading:false,
-html:json.string.text});
-
-}).
-catch(function(error){
-console.error(error);
-});
-}},{key:'render',value:function render()
-{
-return(
-_react2.default.createElement(_reactNative.View,{style:styles.container},
-_react2.default.createElement(_reactNative.WebView,{
-style:{
-backgroundColor:'#E5F9FF99'},
-
-source:{html:this.state.html}}),
-
-this.state.loading&&_react2.default.createElement(_reactNative.View,{style:styles.loading},
-_react2.default.createElement(ActivityIndicator,{
-animating:true,
-size:'large'}))));
-
-
-
-
-}}]);return BlogDetailComponent;}(_react.Component);exports.default=BlogDetailComponent;
-
-
-var styles=_reactNative.StyleSheet.create({
-container:{
-flex:1},
-
-loading:{
-position:'absolute',
-left:0,
-top:0,
-right:0,
-bottom:0,
-alignItems:'center',
-justifyContent:'center',
-backgroundColor:'rgba(180, 180, 180, .3)'}});
-}, 419, null, "CNBlog_RN/blogDetailComponent.js");
-__d(/* CNBlog_RN/utils.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var componentName=function(){function componentName(){babelHelpers.classCallCheck(this,componentName);}babelHelpers.createClass(componentName,null,[{key:'formatTime',value:function formatTime(
+__d(/* CNBlog_RN/utils.js */function(global, require, module, exports) {Object.defineProperty(exports,"__esModule",{value:true});var Utils=function(){function Utils(){babelHelpers.classCallCheck(this,Utils);}babelHelpers.createClass(Utils,null,[{key:'formatTime',value:function formatTime(
 publishedTime){
 var lastTime=new Date(publishedTime);
 var year=lastTime.getFullYear().toString();
@@ -71264,7 +71263,7 @@ for(var i=0,zeros='';i<length-value.length;i++){
 zeros+='0';
 }
 return zeros+value;
-}}]);return componentName;}();exports.default=componentName;
+}}]);return Utils;}();exports.default=Utils;
 }, 420, null, "CNBlog_RN/utils.js");
 __d(/* CNBlog_RN/icon/avator.jpg */function(global, require, module, exports) {module.exports = require(171                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/icon","width":300,"height":300,"scales":[1],"hash":"ffe28fbbbd41a28fa78f730f2cbcc9fc","name":"avator","type":"jpg"}); // 171 = react-native/Libraries/Image/AssetRegistry
 }, 416, null, "CNBlog_RN/icon/avator.jpg");

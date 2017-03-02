@@ -1,4 +1,4 @@
-export default class componentName {
+export default class Utils {
     static formatTime(publishedTime) {
         var lastTime = new Date(publishedTime);
         var year = lastTime.getFullYear().toString();

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, ListView, RefreshControl, ActivityIndicator } from 'react-native';
-import XmlParser from './xmlParser';
 import BlogRow from './blogRow';
+import Network from './network';
 
 export default class BlogListComponent extends Component {
     constructor(props) {
@@ -10,56 +10,38 @@ export default class BlogListComponent extends Component {
         this.state = {
             loading: true,
             loadingMore: false,
+            isRefreshing: false,
             items: [],
             dataSource: ds.cloneWithRows([]),
-            page: 1,
-            isRefreshing: false
+            page: 1
         }
     }
-    componentDidMount() {        
-        this.fetchApi();
+    componentDidMount() {
+        this.fetchInitBlogList();
     }
-    fetchApi() {
-        var url = 'http://wcf.open.cnblogs.com/blog/sitehome/paged/1/20';
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                var json = new XmlParser().parseXmlText(responseText);
-                const newItems = [... this.state.items, ...json.feed.entry];
-                this.setState({
-                    loading: false,
-                    isRefreshing: false,
-                    items: newItems,
-                    dataSource: this.state.dataSource.cloneWithRows(newItems)
-                });
-            })
-            .catch((error) => {
-                console.log('Error fetching the feed: ', error);
-            });
+    fetchInitBlogList = () => {
+        Network.fetchBlogList(1, this.blogListFetchCallback);
     }
-    fetchMore() {
-        var url = 'http://wcf.open.cnblogs.com/blog/sitehome/paged/' + (this.state.page + 1) + '/20';
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                var json = new XmlParser().parseXmlText(responseText);
-                const newItems = [... this.state.items, ...json.feed.entry];
-                this.setState({
-                    loadingMore: false,
-                    isRefreshing: false,
-                    items: newItems,
-                    dataSource: this.state.dataSource.cloneWithRows(newItems),
-                    page: this.state.page + 1
-                });
-            })
-            .catch((error) => {
-                console.log('Error fetching the feed: ', error);
-            });
+    blogListFetchCallback = (json) => {
+        const newItems = [... this.state.items, ...json.feed.entry];
+        this.setState({
+            loading: false,
+            isRefreshing: false,
+            items: newItems,
+            dataSource: this.state.dataSource.cloneWithRows(newItems)
+        });
+    }
+    fetchMore = () => {
+        Network.fetchBlogList(this.state.page + 1, this.blogListFetchCallback);
+        this.setState({
+            loadingMore: false,
+            page: this.state.page + 1
+        });
     }
     onRefresh = () => {
         this.setState({ isRefreshing: true });
         setTimeout(() => {
-            this.fetchApi();
+            this.fetchInitBlogList();
         }, 3000);
     };
     onEndReached = () => {
@@ -100,7 +82,6 @@ export default class BlogListComponent extends Component {
                             />
                         )
                     }}
-
                 />
                 {this.state.loading && <View style={styles.loading}>
                     <ActivityIndicator

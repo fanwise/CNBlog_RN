@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, WebView } from 'react-native';
-import XmlParser from './xmlParser';
+import Network from './network'
 
 export default class BlogDetailComponent extends Component {
     constructor(props) {
@@ -11,30 +11,19 @@ export default class BlogDetailComponent extends Component {
         }
     }
     componentDidMount() {
-        this.fetchApi();
+        Network.fetchBlogDetail(this.props.route.blogId, this.blogDetailfetchCallback)
     }
-    fetchApi() {
-        var url = 'http://wcf.open.cnblogs.com/blog/post/body/' + this.props.route.blogId;
-        fetch(url)
-            .then((response) => response.text())
-            .then((responseText) => {
-                var json = new XmlParser().parseXmlText(responseText);
-                this.setState({
-                    loading: false,
-                    html: json.string.text
-                })
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+    blogDetailfetchCallback = (json) => {
+        this.setState({
+            loading: false,
+            html: json.string.text
+        })
     }
     render() {
         return (
             <View style={styles.container}>
                 <WebView
-                    style={{
-                        backgroundColor: '#E5F9FF99'
-                    }}
+                    style={{ backgroundColor: '#E5F9FF99'}}
                     source={{ html: this.state.html }}
                 />
                 {this.state.loading && <View style={styles.loading}>
