@@ -1,46 +1,45 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, Platform, ActivityIndicator, Image, Navigator } from 'react-native';
-import Header from './header';
-import Footer from './footer';
-import BlogListComponent from './blogListComponent';
+import { View, Text, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import Dimensions from 'Dimensions';
+import TabNavigator from 'react-native-tab-navigator';
+import BlogSence from './blogSence';
+import CollectSence from './collectSence';
 
 var {screenWidth, screenHeight} = Dimensions.get('window');
 
 export default class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            selectedTab: 'blog'
+        }
+    }
     render() {
         return (
-            <Navigator
-                initialRoute={{
-                    title: 'RN博客园',
-                    index: 0,
-                    blogId: 0,
-                    component: BlogListComponent
-                }}
-                configureScene={(route, routeStack) => ({
-                    ...Navigator.SceneConfigs.VerticalUpSwipeJump,
-                    gestures: {
-                        pop: {},
-                    }
-                })}
-                renderScene={(route, navigator) => {
-                    return (
-                        <Image source={require('./icon/wallpaper.jpg')} style={styles.backgroundImage}>
-                            <View style={styles.container}>
-                                <Header
-                                    route={route}
-                                    navigator={navigator}
-                                />
-                                <route.component
-                                    route={route}
-                                    navigator={navigator}
-                                />
-                                <Footer />
-                            </View>
-                        </Image>
-                    );
-                }}
-            />
+            <Image source={require('./icon/wallpaper.jpg')} style={styles.backgroundImage}>
+                <TabNavigator tabBarStyle={styles.tab}>
+                    <TabNavigator.Item
+                        titleStyle={styles.tabText}
+                        selectedTitleStyle={styles.tabText}
+                        selected={this.state.selectedTab === 'blog'}
+                        renderIcon={() => <Image style={styles.tabIcon} source={require('./icon/file.png')} />}
+                        renderSelectedIcon={() => <Image style={styles.tabIcon} source={require('./icon/file.png')} />}
+                        title="blog"
+                        onPress={() => this.setState({ selectedTab: 'blog' })}>
+                        <BlogSence/>
+                    </TabNavigator.Item>
+                    <TabNavigator.Item
+                        titleStyle={styles.tabText}
+                        selectedTitleStyle={styles.tabText}
+                        selected={this.state.selectedTab === 'collect'}
+                        renderIcon={() => <Image style={styles.tabIcon} source={require('./icon/star.png')} />}
+                        renderSelectedIcon={() => <Image style={styles.tabIcon} source={require('./icon/star.png')} />}
+                        title="collect"
+                        onPress={() => this.setState({ selectedTab: 'collect' })}>
+                        <CollectSence/>
+                    </TabNavigator.Item>
+                </TabNavigator >
+            </Image>
         );
     }
 }
@@ -52,8 +51,16 @@ const styles = StyleSheet.create({
         height: screenHeight,
         resizeMode: 'cover'
     },
-    container: {
-        flex: 1,
-        backgroundColor: "#30B3EE88"
+    tab: {
+        backgroundColor: '#30B3EE88',
+        height: 49,
+        alignItems: 'center'
     },
+    tabIcon: {
+        width: 18, 
+        height: 18
+    },
+    tabText: {
+        color: '#FFFFFF' 
+    }
 });
