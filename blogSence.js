@@ -23,6 +23,7 @@ export default class BlogSence extends Component {
                     return (
                         <View style={styles.container}>
                             <Header
+                                sence='blog'
                                 route={route}
                                 navigator={navigator}
                             />

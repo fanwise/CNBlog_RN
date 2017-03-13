@@ -26,7 +26,7 @@ export default class App extends Component {
                         renderSelectedIcon={() => <Image style={styles.tabIcon} source={require('./icon/file.png')} />}
                         title="blog"
                         onPress={() => this.setState({ selectedTab: 'blog' })}>
-                        <BlogSence/>
+                        <BlogSence />
                     </TabNavigator.Item>
                     <TabNavigator.Item
                         titleStyle={styles.tabText}
@@ -36,7 +36,7 @@ export default class App extends Component {
                         renderSelectedIcon={() => <Image style={styles.tabIcon} source={require('./icon/star.png')} />}
                         title="collect"
                         onPress={() => this.setState({ selectedTab: 'collect' })}>
-                        <CollectSence/>
+                        <CollectSence />
                     </TabNavigator.Item>
                 </TabNavigator >
             </Image>
@@ -57,10 +57,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     tabIcon: {
-        width: 18, 
+        width: 18,
         height: 18
     },
     tabText: {
-        color: '#FFFFFF' 
+        color: '#FFFFFF'
     }
 });

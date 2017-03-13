@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, WebView } from 'react-native';
+import { View, Text, StyleSheet, WebView, AsyncStorage } from 'react-native';
 import Network from './network'
 
 export default class BlogDetailComponent extends Component {
@@ -18,12 +18,13 @@ export default class BlogDetailComponent extends Component {
             loading: false,
             html: json.string.text
         })
+        AsyncStorage.setItem(this.props.route.blogId + 'tmp' + 'detail', json.string.text);
     }
     render() {
         return (
             <View style={styles.container}>
                 <WebView
-                    style={{ backgroundColor: '#E5F9FF99'}}
+                    style={{ backgroundColor: '#E5F9FF99' }}
                     source={{ html: this.state.html }}
                 />
                 {this.state.loading && <View style={styles.loading}>

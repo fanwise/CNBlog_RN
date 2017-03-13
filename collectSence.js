@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {View, Text, StyleSheet, Navigator } from 'react-native';
 import Header from './header';
+import SavedListComponent from './savedListComponent';
 
 export default class CollectSence extends Component {
     constructor(props) {
@@ -16,6 +17,7 @@ export default class CollectSence extends Component {
                     title: '我的收藏',
                     index: 0,
                     blogId: 0,
+                    component: SavedListComponent
                 }}
                 configureScene={(route, routeStack) => ({
                     ...Navigator.SceneConfigs.VerticalUpSwipeJump,
@@ -27,6 +29,10 @@ export default class CollectSence extends Component {
                     return (
                         <View style={styles.container}>
                             <Header
+                                route={route}
+                                navigator={navigator}
+                            />
+                            <route.component
                                 route={route}
                                 navigator={navigator}
                             />

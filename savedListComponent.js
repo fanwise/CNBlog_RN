@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, ListView, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ListView, RefreshControl, ActivityIndicator, AsyncStorage } from 'react-native';
 import BlogRow from './blogRow';
 import Network from './network';
 import * as parser from './parser';
 
-export default class BlogListComponent extends Component {
+export default class SavedListComponent extends Component {
     constructor(props) {
         super(props);
         const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
@@ -20,66 +20,35 @@ export default class BlogListComponent extends Component {
     componentDidMount() {
         this.fetchInitBlogList();
     }
+    componentWillReceiveProps() {
+        this.fetchInitBlogList();
+    }
     fetchInitBlogList = () => {
-        Network.fetchBlogList(1, this.blogListFetchCallback);
-    }
-    blogListFetchCallback = (json) => {
-        const newItems = [... this.state.items, ...json.feed.entry];
-        this.setState({
-            loading: false,
-            isRefreshing: false,
-            items: newItems,
-            dataSource: this.state.dataSource.cloneWithRows(newItems)
-        });
-    }
-    fetchMore = () => {
-        Network.fetchBlogList(this.state.page + 1, this.blogListFetchCallback);
-        this.setState({
-            loadingMore: false,
-            page: this.state.page + 1
-        });
-    }
-    onRefresh = () => {
-        this.setState({ isRefreshing: true });
-        setTimeout(() => {
-            this.fetchInitBlogList();
-        }, 3000);
-    };
-    onEndReached = () => {
-        if (!this.state.loadingMore) {
-            this.setState({ loadingMore: true });
-            this.fetchMore();
-        }
-    }
-    renderFooter = () => {
-        if (this.state.loadingMore) {
-            return <ActivityIndicator />;
-        } else {
-            return <View />
-        }
+        AsyncStorage.getItem('summaries')
+            .then((result) => {
+                var summaries = JSON.parse(result);
+                const newItems = summaries ? [...summaries] : [];
+                this.setState({
+                    loading: false,
+                    isRefreshing: false,
+                    items: newItems,
+                    dataSource: this.state.dataSource.cloneWithRows(newItems)
+                });
+            });
     }
     render() {
         return (
             <View style={styles.container}>
                 <ListView ref='listView'
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={this.state.isRefreshing}
-                            onRefresh={this.onRefresh}
-                            tintColor='#FFF'
-                        />
-                    }
                     enableEmptySections
                     showsVerticalScrollIndicator={false}
                     dataSource={this.state.dataSource}
-                    onEndReached={this.onEndReached}
-                    renderFooter={this.renderFooter}
                     renderRow={({...value}) => {
                         return (
                             <BlogRow
                                 route={this.props.route}
                                 navigator={this.props.navigator}
-                                { ...parser.summary(value) }
+                                { ...value }
                             />
                         )
                     }}
