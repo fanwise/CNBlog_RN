@@ -17,6 +17,7 @@ export default class CollectSence extends Component {
                     title: '我的收藏',
                     index: 0,
                     blogId: 0,
+                    sence: 'saved',
                     component: SavedListComponent
                 }}
                 configureScene={(route, routeStack) => ({

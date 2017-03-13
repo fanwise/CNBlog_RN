@@ -11,6 +11,7 @@ export default class BlogSence extends Component {
                     title: 'RN博客园',
                     index: 0,
                     blogId: 0,
+                    sence: 'blog',
                     component: BlogListComponent
                 }}
                 configureScene={(route, routeStack) => ({

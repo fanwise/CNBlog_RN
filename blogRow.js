@@ -8,14 +8,17 @@ var {screenWidth, screenHeight} = Dimensions.get('window');
 
 export default class BlogRow extends Component {
     handlePressRow() {
-        this.cacheSummary();
         const { navigator } = this.props;
+        if (this.props.route.sence === 'blog') {
+            this.cacheSummary();
+        }
         if (navigator) {
             const nextIndex = this.props.route.index + 1;
             navigator.push({
                 title: this.props.title,
                 index: nextIndex,
                 blogId: this.props.blogId,
+                sence: this.props.route.sence,
                 component: BlogDetailComponent
             })
         }

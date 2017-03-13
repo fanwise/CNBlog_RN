@@ -11,7 +11,17 @@ export default class BlogDetailComponent extends Component {
         }
     }
     componentDidMount() {
-        Network.fetchBlogDetail(this.props.route.blogId, this.blogDetailfetchCallback)
+        if (this.props.route.sence === 'blog') {
+            Network.fetchBlogDetail(this.props.route.blogId, this.blogDetailfetchCallback)
+        } else if (this.props.route.sence === 'saved') {
+            AsyncStorage.getItem(this.props.route.blogId + 'detail')
+                .then((result) => {
+                    this.setState({
+                        loading: false,
+                        html: result
+                    });
+                });
+        }
     }
     blogDetailfetchCallback = (json) => {
         this.setState({
