@@ -9,7 +9,7 @@ export default class Header extends Component {
             navigator.pop()
         }
     }
-    handleCollect = () => {
+    handleSave = () => {
         AsyncStorage.getItem('summaries')
             .then((result) => {
                 var isFind = false;
@@ -38,6 +38,20 @@ export default class Header extends Component {
                 AsyncStorage.removeItem(this.props.route.blogId + 'tmp' + 'detail');
             })
     }
+    handleDelete = () => {
+        AsyncStorage.getItem('summaries')
+            .then((result) => {
+                var summaries = JSON.parse(result);
+                if (summaries) {
+                    var newSummaries = summaries.filter((summary) => {
+                        if(summary.blogId != this.props.route.blogId)
+                            return true;
+                    });
+                    AsyncStorage.setItem('summaries', JSON.stringify(newSummaries));
+                    AsyncStorage.removeItem(this.props.route.blogId + 'detail');
+                }
+            })
+    }
     render() {
         return (
             <View style={styles.wrapper}>
@@ -49,9 +63,13 @@ export default class Header extends Component {
                     <View style={styles.titleContainer}>
                         <Text numberOfLines={1} style={styles.title}>{this.props.route.title}</Text>
                     </View>
-                    {(this.props.route.index > 0) && (this.props.sence === 'blog') &&
-                        <TouchableOpacity style={styles.navigationButton} onPress={this.handleCollect.bind(this)}>
+                    {(this.props.route.index > 0) && (this.props.route.sence === 'blog') &&
+                        <TouchableOpacity style={styles.navigationButton} onPress={this.handleSave.bind(this)}>
                             <Text style={styles.buttonText}>收藏</Text>
+                        </TouchableOpacity>}
+                    {(this.props.route.index > 0) && (this.props.route.sence === 'saved') &&
+                        <TouchableOpacity style={styles.navigationButton} onPress={this.handleDelete.bind(this)}>
+                            <Text style={styles.buttonText}>取消收藏</Text>
                         </TouchableOpacity>}
                 </View>
             </View>
