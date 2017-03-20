@@ -4,12 +4,6 @@ import Header from './header';
 import SavedListComponent from './savedListComponent';
 
 export default class CollectSence extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-
-        }
-    }
     render() {
         return (
             <Navigator
