@@ -5,7 +5,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import BlogSence from './blogSence';
 import CollectSence from './collectSence';
 
-var {screenWidth, screenHeight} = Dimensions.get('window');
+var {height, width} = Dimensions.get('window');
 
 export default class App extends Component {
     constructor(props) {
@@ -47,8 +47,8 @@ export default class App extends Component {
 const styles = StyleSheet.create({
     backgroundImage: {
         flex: 1,
-        width: screenWidth,
-        height: screenHeight,
+        width: width,
+        height: height,
         resizeMode: 'cover'
     },
     tab: {

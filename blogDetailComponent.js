@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, WebView, AsyncStorage } from 'react-native';
 import Network from './network'
+import Dimensions from 'Dimensions';
+
+var {height, width} = Dimensions.get('window');
 
 export default class BlogDetailComponent extends Component {
     constructor(props) {
@@ -24,11 +27,20 @@ export default class BlogDetailComponent extends Component {
         }
     }
     blogDetailfetchCallback = (json) => {
+        const htmlStyles = '<style type="text/css">'
+            + 'body {font-size: 14px; width: ${width}px}'
+            + 'div {max-width: 100%; overflow: scroll}'
+            + 'img {max-width: ${width - 16}px}'
+            + 'table {max-width: ${width - 16}px; overflow: scroll}'
+            + 'h1 {font-size: 18px}'
+            + 'h2 {font-size: 16px}'
+            + 'h3 {font-size: 14px}'
+            + '</style>';
         this.setState({
             loading: false,
-            html: json.string.text
+            html: json.string.text + htmlStyles
         })
-        AsyncStorage.setItem(this.props.route.blogId + 'tmp' + 'detail', json.string.text);
+        AsyncStorage.setItem(this.props.route.blogId + 'tmp' + 'detail', json.string.text + htmlStyles);
     }
     render() {
         return (
